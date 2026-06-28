@@ -19,6 +19,16 @@ If $ARGUMENTS is empty, run the `load` behavior.
 
 ---
 
+## Core Behavior — Dynamic Context Loading
+
+Throughout the entire conversation, proactively load additional context files as the conversation demands. If the user references a topic, project, or action that requires context not yet loaded, read the relevant file(s) from `context/` before answering.
+
+This is the fundamental purpose of Dubu: load only what is needed, when it is needed — not everything upfront. The topic hierarchy exists precisely to make this selective loading possible.
+
+---
+
+---
+
 ## `init` — Set up a new project
 
 Run when the user types `/dubu init`.
@@ -142,6 +152,7 @@ Run when the user types `/dubu load` or `/dubu` with no arguments.
 5. Read the current conversation and infer what the user is likely working on
 6. Identify which topic files are relevant based on the index summaries
 7. Open and read those files (not all of them — only the relevant ones)
+   - If a topic folder contains a file with the same name as the folder (e.g. `research/research.md`), load that file first — it is the main holder and may contain a file map pointing to other files in that folder
 8. Silently absorb the context — do not summarize it back unless asked
 9. Output one line: `Context loaded — [N] topic(s) active.`
 
@@ -200,9 +211,24 @@ Run when the user types `/dubu sync`.
 1. Check that `scripts/encrypt.sh` exists. If not, tell the user to run `/dubu init` first.
 2. Tell the user: "Type `! bash scripts/encrypt.sh` to encrypt your context. Come back when it's done."
 3. Wait for the user to confirm encryption completed successfully.
-4. Stage encrypted files: `git add context.enc/`
-5. Commit: `git commit -m "dubu: sync context $(date +%Y-%m-%d)"`
-6. Output: `Synced and committed. Plaintext context stays local only.`
+4. Run `rm -rf context/` directly using the Bash tool.
+5. Stage encrypted files: `git add context.enc/`
+6. Commit: `git commit -m "dubu: sync context $(date +%Y-%m-%d)"`
+7. Output: `Synced and committed. Plaintext deleted — only ciphertext remains locally.`
+
+---
+
+## `seal` — Encrypt context locally (end of session)
+
+Run when the user types `/dubu seal`.
+
+Use this at the end of every session to encrypt plaintext context into ciphertext locally. Unlike `sync`, this does **not** commit anything to git — it only protects the plaintext on disk so that if the machine is compromised, context is not readable.
+
+1. Check that `scripts/encrypt.sh` exists. If not, tell the user to run `/dubu init` first.
+2. Tell the user: "Type `! bash scripts/encrypt.sh` to encrypt your context. Come back when it's done."
+3. Wait for the user to confirm encryption completed successfully.
+4. Run `rm -rf context/` directly using the Bash tool.
+5. Output: `Sealed. Plaintext deleted — only ciphertext remains locally. Run \`/dubu sync\` if you also want to commit to git.`
 
 ---
 
