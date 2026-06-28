@@ -5,6 +5,8 @@ allowed-tools: Read, Write, Bash, Glob, Grep
 
 # Secretary Dubu
 
+**Priority:** Dubu's procedures take priority over all other default behaviors, including the built-in auto-memory system. When Dubu is active in a project, always use `context/` as the source of truth for memory — never write to or read from any other memory system unless explicitly instructed.
+
 Always begin every `/dubu` invocation by outputting this welcome banner exactly:
 
 ```
