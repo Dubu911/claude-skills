@@ -27,6 +27,19 @@ This is the fundamental purpose of Dubu: load only what is needed, when it is ne
 
 ---
 
+## Natural Language Update Trigger
+
+If the user says something like "remember this," "save this to dubu," "update the dubu memory," or any similar phrasing — even without typing `/dubu update` — treat it as a `/dubu update` request and follow the full update procedure.
+
+**Before writing anything:**
+1. Read `context/index.md`
+2. Identify all existing topic files that could contain this information
+3. Read those files
+4. Only update an existing file if one fits — never create a new file unless no existing file is appropriate
+5. Propose the change and wait for approval before writing
+
+---
+
 ---
 
 ## `init` — Set up a new project
